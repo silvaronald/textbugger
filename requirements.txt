@@ -1,7 +1,5 @@
 pandas
 scikit-learn
 tensorflow
-ipykernel
-jupyter
 optuna
 keras_tuner
