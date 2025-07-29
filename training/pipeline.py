@@ -20,13 +20,18 @@ class TextClassifierPipeline:
         
         prefix = os.path.join(base_dir, "..", "datasets", folder)
         
-        self.X_train_pad = np.load(os.path.join(prefix, "X_train_pad.npy"))[:5]
-        self.X_val_pad = np.load(os.path.join(prefix, "X_val_pad.npy"))[:5]
+        self.X_train_pad = np.load(os.path.join(prefix, "X_train_pad.npy"))
+        self.X_val_pad = np.load(os.path.join(prefix, "X_val_pad.npy"))
         self.X_test_pad = np.load(os.path.join(prefix, "X_test_pad.npy"))
         
-        self.y_train = pd.read_csv(os.path.join(prefix, "y_train.csv"))["target"][:5]
-        self.y_val = pd.read_csv(os.path.join(prefix, "y_val.csv"))["target"][:5]
-        self.y_test = pd.read_csv(os.path.join(prefix, "y_test.csv"))["target"]
+        try:
+          self.y_train = pd.read_csv(os.path.join(prefix, "y_train.csv"))["target"]
+          self.y_val = pd.read_csv(os.path.join(prefix, "y_val.csv"))["target"]
+          self.y_test = pd.read_csv(os.path.join(prefix, "y_test.csv"))["target"]
+        except:
+          self.y_train = pd.read_csv(os.path.join(prefix, "y_train.csv"))["class"]
+          self.y_val = pd.read_csv(os.path.join(prefix, "y_val.csv"))["class"]
+          self.y_test = pd.read_csv(os.path.join(prefix, "y_test.csv"))["class"]
 
         with open(os.path.join(prefix, "tokenizer.pkl"), "rb") as f:
             self.tokenizer = pickle.load(f)
