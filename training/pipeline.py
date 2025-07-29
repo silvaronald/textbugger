@@ -24,14 +24,9 @@ class TextClassifierPipeline:
         self.X_val_pad = np.load(os.path.join(prefix, "X_val_pad.npy"))
         self.X_test_pad = np.load(os.path.join(prefix, "X_test_pad.npy"))
         
-        try:
-          self.y_train = pd.read_csv(os.path.join(prefix, "y_train.csv"))["target"]
-          self.y_val = pd.read_csv(os.path.join(prefix, "y_val.csv"))["target"]
-          self.y_test = pd.read_csv(os.path.join(prefix, "y_test.csv"))["target"]
-        except:
-          self.y_train = pd.read_csv(os.path.join(prefix, "y_train.csv"))["class"]
-          self.y_val = pd.read_csv(os.path.join(prefix, "y_val.csv"))["class"]
-          self.y_test = pd.read_csv(os.path.join(prefix, "y_test.csv"))["class"]
+        self.y_train = pd.read_csv(os.path.join(prefix, "y_train.csv"))["label"]
+        self.y_val = pd.read_csv(os.path.join(prefix, "y_val.csv"))["label"]
+        self.y_test = pd.read_csv(os.path.join(prefix, "y_test.csv"))["label"]
 
         with open(os.path.join(prefix, "tokenizer.pkl"), "rb") as f:
             self.tokenizer = pickle.load(f)
@@ -64,7 +59,7 @@ class TextClassifierPipeline:
                 solver = trial.suggest_categorical('solver', ['lbfgs', 'saga'])
 
                 clf = LogisticRegression(C=C, solver=solver, max_iter=500)
-                clf.fit(X_train_flatten, self.y_train)
+                clf.fit(X_train_flatten[:5], self.y_train[:5])
                 y_pred = clf.predict(X_val_flatten)
                 return accuracy_score(self.y_val, y_pred)
 
