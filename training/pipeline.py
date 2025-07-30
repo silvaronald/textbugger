@@ -15,6 +15,7 @@ from tensorflow.keras.models import load_model
 
 class TextClassifierPipeline:
     def __init__(self, folder, max_len=100, embedding_dim=300):
+        self.folder = folder
          # Get the directory where this file is located
         base_dir = os.path.dirname(os.path.abspath(__file__))
         
@@ -24,9 +25,9 @@ class TextClassifierPipeline:
         self.X_val_pad = np.load(os.path.join(prefix, "X_val_pad.npy"))
         self.X_test_pad = np.load(os.path.join(prefix, "X_test_pad.npy"))
         
-        self.y_train = pd.read_csv(os.path.join(prefix, "y_train.csv"))["label"]
-        self.y_val = pd.read_csv(os.path.join(prefix, "y_val.csv"))["label"]
-        self.y_test = pd.read_csv(os.path.join(prefix, "y_test.csv"))["label"]
+        self.y_train = pd.read_csv(os.path.join(prefix, "train.csv"))["label"]
+        self.y_val = pd.read_csv(os.path.join(prefix, "val.csv"))["label"]
+        self.y_test = pd.read_csv(os.path.join(prefix, "test.csv"))["label"]
 
         with open(os.path.join(prefix, "tokenizer.pkl"), "rb") as f:
             self.tokenizer = pickle.load(f)
@@ -214,11 +215,11 @@ class TextClassifierPipeline:
 
     def evaluate(self, model_type):
         if model_type == "lr":
-            model = joblib.load("lr_model.joblib")
+            model = joblib.load(f"{self.folder}/lr_model.joblib")
             return accuracy_score(self.y_test, model.predict(self.flatten_embeddings(self.X_test_pad)))
         elif model_type == "cnn":
-            model = load_model("cnn_model.h5")
+            model = load_model(f"{self.folder}/cnn_model.h5")
             return model.evaluate(self.X_test_pad, self.y_test)
         elif model_type == "lstm":
-            model = load_model("lstm_model.h5")
+            model = load_model(f"{self.folder}/lstm_model.h5")
             return model.evaluate(self.X_test_pad, self.y_test)
