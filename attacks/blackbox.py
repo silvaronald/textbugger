@@ -6,7 +6,7 @@ import spacy
 import numpy as np
 import tensorflow_hub as hub
 from nltk.corpus import wordnet
-from utils import split_sentences, split_words
+from utils import split_sentences, split_words, fix_spacing
 
 class BugGenerator:
     def __init__(self):
@@ -113,7 +113,8 @@ class BlackBoxTextBugger:
                 for bug in bugs:
                     temp_words = words.copy()
                     temp_words[idx] = bug
-                    perturbed_sentence = " ".join(temp_words)
+                    # fix spacing porque sinais eram considerados palavra, e acabava gerando uma pertubação não desejada
+                    perturbed_sentence = fix_spacing(" ".join(temp_words))
                     perturbed_text = adv_text.replace(sentence, perturbed_sentence)
 
                     new_label, new_score = self.classifier(perturbed_text)
