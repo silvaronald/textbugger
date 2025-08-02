@@ -1,5 +1,8 @@
 pandas
 scikit-learn
-tensorflow
+tensorflow==2.15.0
+tensorflow_hub
 optuna
 keras_tuner
+spacy
+nltk
