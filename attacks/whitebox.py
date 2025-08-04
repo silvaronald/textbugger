@@ -7,7 +7,8 @@ import os
 import pickle 
 import joblib
 from tensorflow.keras.models import load_model
-
+import gzip
+ 
 class AdversarialAttack():
     def __init__(self, folder):
         base_dir = os.path.dirname(os.path.abspath(__file__))
@@ -22,8 +23,14 @@ class AdversarialAttack():
         self.model_cnn = load_model(os.path.join(prefix_training, "cnn_model.h5"))
         self.model_lstm = load_model(os.path.join(prefix_training, "lstm_model.h5"))
 
+        with gzip.open(os.path.join(prefix_datasets, "..", "glove.840B.300d.pkl.gz"), 'rb') as f:
+            print("Loading cached GloVe embeddings...")
+            self.embedding_dict = pickle.load(f)
+
         self.sub_c_map = {'a': '@', 'o': '0', 'l': '1', 'e': '3', 'i': '1', 's': '$'}
-        self.bug_functions = [self.insert_bug, self.delete_bug, self.swap_bug, self.substitute_c]
+        self.bug_functions = [self.insert_bug, self.delete_bug, self.swap_bug, self.substitute_c, self.substitute_w]
+        #self.bug_functions = [self.insert_bug, self.delete_bug, self.swap_bug, self.substitute_c]
+
         self.max_len = 100
 
     # ------------------- STEP 1: WORD IMPORTANCE -------------------
@@ -40,7 +47,6 @@ class AdversarialAttack():
         Returns:
         - importance: 1D numpy array of shape (max_len,) with importance scores
         """
-        print(X_padded)
         max_len = len(X_padded)
         embedding_dim = self.embedding_matrix.shape[1]
 
@@ -59,8 +65,8 @@ class AdversarialAttack():
             # Importance per word = norm of (coef * word_embedding)
             importance = np.linalg.norm(coefs_2d * input_2d, axis=1)
 
-        elif model_type in ["cnn", "lstm"]:
-            model = self.model_cnn if model_type == "cnn" else self.model_lstm
+        elif model_type == "lstm":
+            model = self.model_lstm
             X_tensor = tf.convert_to_tensor(X_padded.reshape(1, -1), dtype=tf.int32)
 
             embedding_layer = model.layers[0]
@@ -79,6 +85,22 @@ class AdversarialAttack():
 
             grads = grads.numpy()[0]  # shape: (max_len, embedding_dim)
             importance = np.linalg.norm(grads, axis=1)
+
+        elif model_type == "cnn":
+            # Use input-independent estimate of importance
+            conv1d_layer = self.model_cnn.get_layer("conv1d")
+            weights, _ = conv1d_layer.get_weights()  # shape: (kernel_size, emb_dim, num_filters)
+
+            # 1. Importance per embedding dimension
+            emb_dim_importance = np.sum(np.abs(weights), axis=(0, 2))  # shape: (embedding_dim,)
+
+            # 2. Get embeddings of current input
+            embedded = self.embedding_matrix[X_padded]  # shape: (max_len, embedding_dim)
+
+            # 3. Score each word by dot product with emb_dim_importance
+            importance = np.linalg.norm(embedded * emb_dim_importance, axis=1)  # shape: (max_len,)
+
+            return importance
 
         else:
             raise ValueError(f"Unknown model_type: {model_type}")
@@ -111,12 +133,12 @@ class AdversarialAttack():
                 return word[:i] + self.sub_c_map[ch] + word[i+1:]
         return word
 
-    def substitute_w(self, word, embedding_dict, top_k=5):
-        if word not in embedding_dict:
+    def substitute_w(self, word, top_k=5):
+        if word not in self.embedding_dict:
             return word
-        original_vec = embedding_dict[word].reshape(1, -1)
+        original_vec = self.embedding_dict[word].reshape(1, -1)
         candidates = [(w, cosine_similarity(original_vec, v.reshape(1, -1))[0][0])
-                      for w, v in embedding_dict.items() if w != word]
+                      for w, v in self.embedding_dict.items() if w != word]
         candidates = sorted(candidates, key=lambda x: -x[1])
         return candidates[0][0] if candidates else word
 
@@ -125,7 +147,7 @@ class AdversarialAttack():
         return SequenceMatcher(None, x, x_adv).ratio()
 
     # ------------------- MAIN ATTACK -------------------
-    def generate_adversarial(self, text, model_type="lstm", embedding_dict=None, epsilon=0.8):
+    def generate_adversarial(self, text, model_type="lstm", epsilon=0.8):
         tokens = self.tokenizer.texts_to_sequences([text])
         padded = tf.keras.preprocessing.sequence.pad_sequences(tokens, maxlen=self.max_len, padding='post', truncating='post')[0]
         
@@ -147,16 +169,12 @@ class AdversarialAttack():
 
         x_adv_words = words.copy()
 
-        print(importance_scores)
-        print(sorted_indices, len(words))
         for idx in sorted_indices:
             if idx >= len(words) or importance_scores[idx] == 0:
                 continue
 
             original_word = x_adv_words[idx]
             bugged_versions = [bug_fn(original_word) for bug_fn in self.bug_functions]
-            if embedding_dict:
-                bugged_versions.append(self.substitute_w(original_word, embedding_dict))
 
             best_bug = None
             best_conf_drop = 0
@@ -188,7 +206,7 @@ class AdversarialAttack():
                 # If label flipped, stop immediately
                 if new_pred != original_label:
                     temp_words[idx] = bug  # Apply it permanently
-                    return ' '.join(temp_words)
+                    return ' '.join(temp_words), original_label, True
                 
                 # Otherwise, keep best bug based on confidence drop
                 conf_drop = original_proba - new_proba
@@ -200,9 +218,7 @@ class AdversarialAttack():
             if best_bug:
                 x_adv_words[idx] = best_bug
 
-            print(' '.join(x_adv_words))
-
-        return None  # No successful adversarial attack found
+        return ' '.join(x_adv_words), original_label, False  # No successful adversarial attack found
 
     def flatten_embeddings(self, seq, embedding_matrix):
         embedded = np.array([embedding_matrix[idx] for idx in seq])
