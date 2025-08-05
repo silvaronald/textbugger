@@ -103,16 +103,19 @@ class BlackBoxTextBugger:
 
             word_scores.sort(key=lambda x: -x[1])
 
+            # Trabalhar sobre a SENTENÇA LOCALMENTE
+            perturbed_words = words.copy()
+
             for idx, _ in word_scores:
-                bugs = self.bug_gen.generate_bugs(words[idx])
+                bugs = self.bug_gen.generate_bugs(perturbed_words[idx])
                 best_bug = None
                 best_drop = 0
 
                 for bug in bugs:
-                    temp_words = words.copy()
+                    temp_words = perturbed_words.copy()
                     temp_words[idx] = bug
                     perturbed_sentence = fix_spacing(" ".join(temp_words))
-                    perturbed_text = adv_text.replace(sentence, perturbed_sentence)
+                    perturbed_text = adv_text.replace(sentence, perturbed_sentence, 1)
 
                     new_label, new_score = self.classifier(perturbed_text)
                     num_reqs += 1
@@ -126,7 +129,10 @@ class BlackBoxTextBugger:
                             return perturbed_text, original_label, num_reqs, True
 
                 if best_bug:
-                    words[idx] = best_bug
-                    adv_text = adv_text.replace(sentence, fix_spacing(" ".join(words)))
+                    perturbed_words[idx] = best_bug  # aplica a alteração localmente
+
+            # Atualiza a sentença perturbada final de uma vez no texto
+            adv_text = adv_text.replace(sentence, fix_spacing(" ".join(perturbed_words)), 1)
+
 
         return adv_text, original_label, num_reqs, False
