@@ -3,3 +3,8 @@ scikit-learn
 tensorflow
 optuna
 keras_tuner
+spacy
+fasttext
+numpy
+difflib
+google-cloud-language
