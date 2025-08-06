@@ -69,7 +69,10 @@ class BlackBoxTextBugger:
         self.similarity = SemanticSimilarity(threshold=similarity_threshold)
 
     def attack(self, text):
+        num_reqs = 0
+
         original_label, original_score = self.classifier(text)
+        num_reqs += 1
         adv_text = copy.deepcopy(text)
 
         # Step 1: Sentence importance filtering and sorting
@@ -77,8 +80,9 @@ class BlackBoxTextBugger:
         important_sentences = []
         for s in sentences:
             pred_label, score = self.classifier(s)
+            num_reqs += 1
             if pred_label == original_label:
-                important_sentences.append((s, score[original_label]))
+                important_sentences.append((s, score))
 
         important_sentences.sort(key=lambda x: -x[1])  # descending confidence
 
@@ -86,12 +90,15 @@ class BlackBoxTextBugger:
         for sentence, _ in important_sentences:
             words = split_words(sentence)
             original_sentence_label, original_sentence_score = self.classifier(sentence)
+            num_reqs += 1
 
             word_scores = []
             for i in range(len(words)):
                 modified = " ".join(w for j, w in enumerate(words) if j != i)
                 _, score = self.classifier(modified)
-                drop = original_sentence_score[original_label] - score[original_label]
+                num_reqs += 1
+
+                drop = original_sentence_score - score
                 word_scores.append((i, drop))
 
             word_scores.sort(key=lambda x: -x[1])
@@ -108,16 +115,18 @@ class BlackBoxTextBugger:
                     perturbed_text = adv_text.replace(sentence, perturbed_sentence)
 
                     new_label, new_score = self.classifier(perturbed_text)
-                    drop = original_score[original_label] - new_score[original_label]
+                    num_reqs += 1
+
+                    drop = original_score - new_score
 
                     if drop > best_drop and self.similarity.similarity(text, perturbed_text):
                         best_bug = bug
                         best_drop = drop
                         if new_label != original_label:
-                            return perturbed_text
+                            return perturbed_text, original_label, num_reqs, True
 
                 if best_bug:
                     words[idx] = best_bug
                     adv_text = adv_text.replace(sentence, fix_spacing(" ".join(words)))
 
-        return adv_text
+        return adv_text, original_label, num_reqs, False
