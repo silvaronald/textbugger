@@ -5,13 +5,13 @@ import csv
 import os
 import re
 
-models = ["fasttext", "sst2", "toxic-bert", "twitter-roberta"]
+models = ["sst2", "fasttext", "toxic-bert", "twitter-roberta"]
 datasets = ["rtmr", "hate", "kaggle"]
 
-def log_result(csv_file, original_text, adversarial_text, original_label, num_reqs, attack_successful):
+def log_result(csv_file, original_text, adversarial_text, original_label, num_reqs, num_bugs, attack_successful):
     with open(csv_file, mode='a', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
-        writer.writerow([original_text, adversarial_text, original_label, num_reqs, attack_successful])
+        writer.writerow([original_text, adversarial_text, original_label, num_reqs, num_bugs, attack_successful])
 
 for model in models:
     cw = ClassificationWrapper(model)
@@ -28,9 +28,9 @@ for model in models:
 
         with open(file, mode='w', newline='', encoding='utf-8') as f:
             writer = csv.writer(f)
-            writer.writerow(["original_text", "adversarial_text", "original_label", "requests_number", "attack_sucessful"])
+            writer.writerow(["original_text", "adversarial_text", "original_label", "requests_number", "num_perturbed", "attack_sucessful"])
         
-        for x in X_test:
-            adv_text, og_label, num_reqs, success = bb.attack(re.sub(r'\s+', ' ', x).strip()) # remover \n, \t e multiplos espaços
+        for x in X_test[:5]:
+            adv_text, og_label, num_reqs, num_bugs, success = bb.attack(re.sub(r'\s+', ' ', x).strip()) # remover \n, \t e multiplos espaços
 
-            log_result(file, x, adv_text, og_label, num_reqs, success)
+            log_result(file, x, adv_text, og_label, num_reqs, num_bugs, success)

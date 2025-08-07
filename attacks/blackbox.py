@@ -70,6 +70,7 @@ class BlackBoxTextBugger:
 
     def attack(self, text):
         num_reqs = 0
+        num_bugs = 0
 
         original_label, original_score = self.classifier(text)
         num_reqs += 1
@@ -103,19 +104,17 @@ class BlackBoxTextBugger:
 
             word_scores.sort(key=lambda x: -x[1])
 
-            # Trabalhar sobre a SENTENÇA LOCALMENTE
-            perturbed_words = words.copy()
-
             for idx, _ in word_scores:
-                bugs = self.bug_gen.generate_bugs(perturbed_words[idx])
+                num_bugs += 1
+                bugs = self.bug_gen.generate_bugs(words[idx])
                 best_bug = None
                 best_drop = 0
 
                 for bug in bugs:
-                    temp_words = perturbed_words.copy()
+                    temp_words = words.copy()
                     temp_words[idx] = bug
                     perturbed_sentence = fix_spacing(" ".join(temp_words))
-                    perturbed_text = adv_text.replace(sentence, perturbed_sentence, 1)
+                    perturbed_text = adv_text.replace(sentence, perturbed_sentence)
 
                     new_label, new_score = self.classifier(perturbed_text)
                     num_reqs += 1
@@ -126,13 +125,13 @@ class BlackBoxTextBugger:
                         best_bug = bug
                         best_drop = drop
                         if new_label != original_label:
-                            return perturbed_text, original_label, num_reqs, True
+                            return perturbed_text, original_label, num_reqs, num_bugs, True
 
                 if best_bug:
-                    perturbed_words[idx] = best_bug  # aplica a alteração localmente
+                    words[idx] = best_bug
+                    new_sentence = fix_spacing(" ".join(words))
+                    adv_text = adv_text.replace(sentence, new_sentence)
+                    sentence = new_sentence
 
-            # Atualiza a sentença perturbada final de uma vez no texto
-            adv_text = adv_text.replace(sentence, fix_spacing(" ".join(perturbed_words)), 1)
 
-
-        return adv_text, original_label, num_reqs, False
+        return adv_text, original_label, num_reqs, num_bugs, False
