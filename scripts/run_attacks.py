@@ -30,7 +30,7 @@ from models.api_models import APIModelWrapper
 from clients.ibm_watson import IBMWatsonClassifier
 from clients.azure_text import AzureTextAnalyticsClassifier
 from clients.google_nlp import GoogleNLPClassifier
-# from clients.aws_comprehend import AWSComprehendClassifier
+from clients.aws_comprehend import AWSComprehendClassifier
 from utils.text_processing import split_sentences, split_words, fix_spacing
 
 # Optional import for local models
@@ -117,12 +117,28 @@ def save_results(results, target_type, model_name, dataset_name):
 
 def run_api_attacks(models, dataset_name, limit, logger, from_initial=0):
     """Run attacks on API models"""
-    api_clients = {
-        "ibm_watson": IBMWatsonClassifier(),
-        "azure_text_analytics": AzureTextAnalyticsClassifier(),
-        "google_cloud_nlp": GoogleNLPClassifier(),
-        # "aws_comprehend": AWSComprehendClassifier()
-    }
+    api_clients = {}
+    
+    # Try to initialize each client
+    try:
+        api_clients["ibm_watson"] = IBMWatsonClassifier()
+    except Exception as e:
+        logger.warning(f"⚠️ IBM Watson not available: {e}")
+    
+    try:
+        api_clients["azure_text_analytics"] = AzureTextAnalyticsClassifier()
+    except Exception as e:
+        logger.warning(f"⚠️ Azure Text Analytics not available: {e}")
+    
+    try:
+        api_clients["google_cloud_nlp"] = GoogleNLPClassifier()
+    except Exception as e:
+        logger.warning(f"⚠️ Google Cloud NLP not available: {e}")
+    
+    try:
+        api_clients["aws_comprehend"] = AWSComprehendClassifier()
+    except Exception as e:
+        logger.warning(f"⚠️ AWS Comprehend not available: {e}")
     
     if models:
         # Filter to requested models
