@@ -68,8 +68,8 @@ def setup_logging():
     logger.info(f"📝 Log file: {log_filename}")
     return logger, log_filename
 
-def load_dataset(dataset_name, limit=None):
-    """Load dataset with optional limit"""
+def load_dataset(dataset_name, limit=None, from_initial=0):
+    """Load dataset with optional limit and starting index"""
     base_path = Path(f"datasets/{dataset_name}")
     
     # Try different file names
@@ -82,8 +82,15 @@ def load_dataset(dataset_name, limit=None):
         if file_path.exists():
             df = pd.read_csv(file_path)
             texts = df["text"]
+            
+            # Apply from_initial offset
+            if from_initial > 0:
+                texts = texts.iloc[from_initial:]
+            
+            # Apply limit
             if limit:
                 texts = texts.head(limit)
+                
             return texts.tolist()
     
     raise FileNotFoundError(f"Could not find test data for {dataset_name}")
@@ -108,7 +115,7 @@ def save_results(results, target_type, model_name, dataset_name):
     
     return filename
 
-def run_api_attacks(models, dataset_name, limit, logger):
+def run_api_attacks(models, dataset_name, limit, logger, from_initial=0):
     """Run attacks on API models"""
     api_clients = {
         "ibm_watson": IBMWatsonClassifier(),
@@ -121,7 +128,7 @@ def run_api_attacks(models, dataset_name, limit, logger):
         # Filter to requested models
         api_clients = {k: v for k, v in api_clients.items() if k in models}
     
-    texts = load_dataset(dataset_name, limit)
+    texts = load_dataset(dataset_name, limit, from_initial)
     overall_results = {}
     
     for api_name, client in api_clients.items():
@@ -175,7 +182,7 @@ def run_api_attacks(models, dataset_name, limit, logger):
     
     return overall_results
 
-def run_local_attacks(models, dataset_name, limit, logger):
+def run_local_attacks(models, dataset_name, limit, logger, from_initial=0):
     """Run attacks on local models"""
     if not LOCAL_MODELS_AVAILABLE:
         logger.error("❌ Local models not available - missing dependencies (fasttext, transformers, etc.)")
@@ -249,6 +256,8 @@ def main():
                        help="Dataset to use (default: rtmr)")
     parser.add_argument("--limit", type=int, default=None,
                        help="Limit number of samples (default: use NUM_ATTACKS_API from .env)")
+    parser.add_argument("--from-initial", type=int, default=0,
+                       help="Start from this index in the dataset (default: 0)")
     
     args = parser.parse_args()
     
@@ -257,20 +266,21 @@ def main():
     
     # Get limit from env if not specified
     if args.limit is None:
-        args.limit = int(os.getenv('NUM_ATTACKS_API', 10))
+        args.limit = int(os.getenv('NUM_ATTACKS_API', 5))
     
     logger.info("🎬 Starting TextBugger Attacks")
     logger.info(f"Target: {args.target}")
     logger.info(f"Dataset: {args.dataset}")
     logger.info(f"Limit: {args.limit}")
     logger.info(f"Models: {args.model or 'all'}")
+    logger.info(f"From initial index: {args.from_initial}")
     logger.info("="*80)
     
     # Run attacks
     if args.target == "api":
-        results = run_api_attacks(args.model, args.dataset, args.limit, logger)
+        results = run_api_attacks(args.model, args.dataset, args.limit, logger, from_initial=args.from_initial)
     else:
-        results = run_local_attacks(args.model, args.dataset, args.limit, logger)
+        results = run_local_attacks(args.model, args.dataset, args.limit, logger, from_initial=args.from_initial)
     
     # Final summary
     logger.info("="*80)

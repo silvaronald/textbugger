@@ -36,6 +36,10 @@ env/
 ENV/
 textbugger-env/
 
+# Logs
+*.log
+logs/
+
 # IDE
 .vscode/
 .idea/
@@ -52,10 +56,10 @@ Thumbs.db
 # *.log - KEEP individual log files
 
 # Remove old attack files (will be replaced by unified scripts)
-src/attacks/run_*.py
-src/attacks/test_*.py
-src/attacks/api_attacks*.log
-src/attacks/results/
+# src/attacks/run_*.py
+# src/attacks/test_*.py
+# src/attacks/api_attacks*.log
+# src/attacks/results/
 
 # FastText duplicate (to be removed)
 black-box/fastText/

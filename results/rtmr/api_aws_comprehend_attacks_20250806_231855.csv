@@ -1,4 +1,0 @@
-original_text,adversarial_text,original_label,requests_used,num_perturbedattack_successful,timestamp
-occasionally funny ,occasionally funny , always very colorful and enjoyably overblown in the traditional almodóvar style ., always very colorful and enjoyably overblown in the traditional almodóvar style .","occasionally funny , always very colorful and enjoyably overblown in the traditional almodóvar style .",error,0,0,False,2025-08-06T23:18:55.063387
-becomes the last thing you would expect from a film with this title or indeed from any plympton film : boring .,becomes the last thing you would expect from a film with this title or indeed from any plympton film : boring .,error,0,0,False,2025-08-06T23:18:55.063413
-"sodden and glum , even in those moments where it's supposed to feel funny and light .","sodden and glum , even in those moments where it's supposed to feel funny and light .",error,0,0,False,2025-08-06T23:18:55.063424
