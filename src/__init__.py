@@ -8,6 +8,11 @@ __version__ = "1.0.0"
 __author__ = "TextBugger Research Team"
 
 from .attacks import BlackBoxTextBugger
-from .models import LocalModelWrapper, APIModelWrapper
+from .models import APIModelWrapper
 
-__all__ = ["BlackBoxTextBugger", "LocalModelWrapper", "APIModelWrapper"]
+# Handle optional imports
+try:
+    from .models import LocalModelWrapper
+    __all__ = ["BlackBoxTextBugger", "LocalModelWrapper", "APIModelWrapper"]
+except ImportError:
+    __all__ = ["BlackBoxTextBugger", "APIModelWrapper"]

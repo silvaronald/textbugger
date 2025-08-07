@@ -41,7 +41,7 @@ def test_api_attack():
     
     try:
         result = attacker.attack(text)
-        adv_text, og_label, num_reqs, success = result
+        adv_text, og_label, num_reqs, num_bugs, success = result
         
         if success:
             new_label, new_scores = client.classify(adv_text)
@@ -49,6 +49,7 @@ def test_api_attack():
             print(f"Adversarial text: {adv_text}")
             print(f"New classification: {new_label}")
             print(f"API requests used: {num_reqs}")
+            print(f"Number of bugs generated: {num_bugs}")
         else:
             print(f"❌ Attack failed after {num_reqs} requests")
             print(f"Final text: {adv_text}")

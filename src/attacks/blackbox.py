@@ -10,6 +10,7 @@ except ImportError:
 from difflib import SequenceMatcher
 
 
+
 class BugGenerator:
     def __init__(self):
         self.visual_chars = {'o': '0', 'l': '1', 'a': '@', 'e': '3', 's': '$', 'i': '1'}
@@ -75,6 +76,7 @@ class BlackBoxTextBugger:
 
     def attack(self, text):
         num_reqs = 0
+        num_bugs = 0
 
         original_label, original_score = self.classifier(text)
         num_reqs += 1
@@ -109,6 +111,7 @@ class BlackBoxTextBugger:
             word_scores.sort(key=lambda x: -x[1])
 
             for idx, _ in word_scores:
+                num_bugs += 1
                 bugs = self.bug_gen.generate_bugs(words[idx])
                 best_bug = None
                 best_drop = 0
@@ -128,10 +131,13 @@ class BlackBoxTextBugger:
                         best_bug = bug
                         best_drop = drop
                         if new_label != original_label:
-                            return perturbed_text, original_label, num_reqs, True
+                            return perturbed_text, original_label, num_reqs, num_bugs, True
 
                 if best_bug:
                     words[idx] = best_bug
-                    adv_text = adv_text.replace(sentence, fix_spacing(" ".join(words)))
+                    new_sentence = fix_spacing(" ".join(words))
+                    adv_text = adv_text.replace(sentence, new_sentence)
+                    sentence = new_sentence
 
-        return adv_text, original_label, num_reqs, False
+
+        return adv_text, original_label, num_reqs, num_bugs, False

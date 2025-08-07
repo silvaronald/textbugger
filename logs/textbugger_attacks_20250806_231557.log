@@ -1,0 +1,53 @@
+2025-08-06 23:15:57,268 - INFO - 📝 Log file: logs/textbugger_attacks_20250806_231557.log
+2025-08-06 23:15:57,268 - INFO - 🎬 Starting TextBugger Attacks
+2025-08-06 23:15:57,268 - INFO - Target: api
+2025-08-06 23:15:57,268 - INFO - Dataset: rtmr
+2025-08-06 23:15:57,268 - INFO - Limit: 3
+2025-08-06 23:15:57,268 - INFO - Models: all
+2025-08-06 23:15:57,268 - INFO - ================================================================================
+2025-08-06 23:15:57,332 - INFO - Found credentials in environment variables.
+2025-08-06 23:15:57,402 - INFO - 🚀 Starting ibm_watson attacks on rtmr
+2025-08-06 23:15:57,402 - INFO - 🎯 [ibm_watson] Attack 1/3
+2025-08-06 23:16:11,656 - INFO -   ✅ SUCCESS
+2025-08-06 23:16:11,658 - INFO - 🎯 [ibm_watson] Attack 2/3
+2025-08-06 23:16:27,093 - INFO -   ✅ SUCCESS
+2025-08-06 23:16:27,093 - INFO - 🎯 [ibm_watson] Attack 3/3
+2025-08-06 23:16:38,312 - INFO -   ✅ SUCCESS
+2025-08-06 23:16:38,314 - INFO - 📊 ibm_watson Summary: 3/3 (100.0%) - 89 requests
+2025-08-06 23:16:38,314 - INFO - 💾 Results: results/rtmr/api_ibm_watson_attacks_20250806_231638.csv
+2025-08-06 23:16:38,314 - INFO - 🚀 Starting azure_text_analytics attacks on rtmr
+2025-08-06 23:16:38,315 - INFO - 🎯 [azure_text_analytics] Attack 1/3
+2025-08-06 23:16:51,419 - INFO -   ❌ FAILED
+2025-08-06 23:16:51,420 - INFO - 🎯 [azure_text_analytics] Attack 2/3
+2025-08-06 23:16:57,512 - INFO -   ✅ SUCCESS
+2025-08-06 23:16:57,512 - INFO - 🎯 [azure_text_analytics] Attack 3/3
+2025-08-06 23:17:03,639 - INFO -   ✅ SUCCESS
+2025-08-06 23:17:03,641 - INFO - 📊 azure_text_analytics Summary: 2/3 (66.7%) - 170 requests
+2025-08-06 23:17:03,641 - INFO - 💾 Results: results/rtmr/api_azure_text_analytics_attacks_20250806_231703.csv
+2025-08-06 23:17:03,642 - INFO - 🚀 Starting google_cloud_nlp attacks on rtmr
+2025-08-06 23:17:03,642 - INFO - 🎯 [google_cloud_nlp] Attack 1/3
+2025-08-06 23:17:37,050 - INFO -   ✅ SUCCESS
+2025-08-06 23:17:37,052 - INFO - 🎯 [google_cloud_nlp] Attack 2/3
+2025-08-06 23:18:35,397 - INFO -   ✅ SUCCESS
+2025-08-06 23:18:35,398 - INFO - 🎯 [google_cloud_nlp] Attack 3/3
+2025-08-06 23:18:53,239 - INFO -   ✅ SUCCESS
+2025-08-06 23:18:53,242 - INFO - 📊 google_cloud_nlp Summary: 3/3 (100.0%) - 161 requests
+2025-08-06 23:18:53,242 - INFO - 💾 Results: results/rtmr/api_google_cloud_nlp_attacks_20250806_231853.csv
+2025-08-06 23:18:53,242 - INFO - 🚀 Starting aws_comprehend attacks on rtmr
+2025-08-06 23:18:53,243 - INFO - 🎯 [aws_comprehend] Attack 1/3
+2025-08-06 23:18:53,906 - ERROR -   💥 ERROR: An error occurred (UnrecognizedClientException) when calling the DetectSentiment operation: The security token included in the request is invalid.
+2025-08-06 23:18:53,906 - INFO - 🎯 [aws_comprehend] Attack 2/3
+2025-08-06 23:18:54,475 - ERROR -   💥 ERROR: An error occurred (UnrecognizedClientException) when calling the DetectSentiment operation: The security token included in the request is invalid.
+2025-08-06 23:18:54,476 - INFO - 🎯 [aws_comprehend] Attack 3/3
+2025-08-06 23:18:55,061 - ERROR -   💥 ERROR: An error occurred (UnrecognizedClientException) when calling the DetectSentiment operation: The security token included in the request is invalid.
+2025-08-06 23:18:55,064 - INFO - 📊 aws_comprehend Summary: 0/3 (0.0%) - 0 requests
+2025-08-06 23:18:55,064 - INFO - 💾 Results: results/rtmr/api_aws_comprehend_attacks_20250806_231855.csv
+2025-08-06 23:18:55,070 - INFO - ================================================================================
+2025-08-06 23:18:55,070 - INFO - 🏁 FINAL SUMMARY
+2025-08-06 23:18:55,070 - INFO - ================================================================================
+2025-08-06 23:18:55,070 - INFO - 🔹 ibm_watson: 3/3 (100.0%) - 89 requests
+2025-08-06 23:18:55,070 - INFO - 🔹 azure_text_analytics: 2/3 (66.7%) - 170 requests
+2025-08-06 23:18:55,070 - INFO - 🔹 google_cloud_nlp: 3/3 (100.0%) - 161 requests
+2025-08-06 23:18:55,070 - INFO - 🔹 aws_comprehend: 0/3 (0.0%) - 0 requests
+2025-08-06 23:18:55,070 - INFO - ✅ All attacks completed!
+2025-08-06 23:18:55,070 - INFO - 📁 Check results/ folder and logs/textbugger_attacks_20250806_231557.log for details

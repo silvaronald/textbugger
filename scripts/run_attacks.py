@@ -30,7 +30,7 @@ from models.api_models import APIModelWrapper
 from clients.ibm_watson import IBMWatsonClassifier
 from clients.azure_text import AzureTextAnalyticsClassifier
 from clients.google_nlp import GoogleNLPClassifier
-from clients.aws_comprehend import AWSComprehendClassifier
+# from clients.aws_comprehend import AWSComprehendClassifier
 from utils.text_processing import split_sentences, split_words, fix_spacing
 
 # Optional import for local models
@@ -100,7 +100,7 @@ def save_results(results, target_type, model_name, dataset_name):
         writer = csv.writer(f)
         writer.writerow([
             "original_text", "adversarial_text", "original_label", 
-            "requests_used", "attack_successful", "timestamp"
+            "requests_used", "num_perturbed", "attack_successful", "timestamp"
         ])
         
         for result in results:
@@ -114,7 +114,7 @@ def run_api_attacks(models, dataset_name, limit, logger):
         "ibm_watson": IBMWatsonClassifier(),
         "azure_text_analytics": AzureTextAnalyticsClassifier(),
         "google_cloud_nlp": GoogleNLPClassifier(),
-        "aws_comprehend": AWSComprehendClassifier()
+        # "aws_comprehend": AWSComprehendClassifier()
     }
     
     if models:
@@ -140,7 +140,7 @@ def run_api_attacks(models, dataset_name, limit, logger):
                 logger.info(f"🎯 [{api_name}] Attack {i}/{len(texts)}")
                 
                 try:
-                    adv_text, og_label, num_reqs, success = attacker.attack(clean_text)
+                    adv_text, og_label, num_reqs, num_bugs, success = attacker.attack(clean_text)
                     
                     if success:
                         successful += 1
@@ -149,11 +149,11 @@ def run_api_attacks(models, dataset_name, limit, logger):
                         logger.info(f"  ❌ FAILED")
                     
                     total_requests += num_reqs
-                    results.append([clean_text, adv_text, og_label, num_reqs, success])
+                    results.append([clean_text, adv_text, og_label, num_reqs, num_bugs, success])
                     
                 except Exception as e:
                     logger.error(f"  💥 ERROR: {e}")
-                    results.append([clean_text, clean_text, "error", 0, False])
+                    results.append([clean_text, "error", "error", 0, 0, False])
             
             # Save results
             filename = save_results(results, "api", api_name, dataset_name)
@@ -204,7 +204,7 @@ def run_local_attacks(models, dataset_name, limit, logger):
                 logger.info(f"🎯 [{model_name}] Attack {i}/{len(texts)}")
                 
                 try:
-                    adv_text, og_label, num_reqs, success = attacker.attack(clean_text)
+                    adv_text, og_label, num_reqs, num_bugs, success = attacker.attack(clean_text)
                     
                     if success:
                         successful += 1
@@ -213,11 +213,11 @@ def run_local_attacks(models, dataset_name, limit, logger):
                         logger.info(f"  ❌ FAILED")
                     
                     total_requests += num_reqs
-                    results.append([clean_text, adv_text, og_label, num_reqs, success])
+                    results.append([clean_text, adv_text, og_label, num_reqs, num_bugs, success])
                     
                 except Exception as e:
                     logger.error(f"  💥 ERROR: {e}")
-                    results.append([clean_text, clean_text, "error", 0, False])
+                    results.append([clean_text, clean_text, "error", 0, 0, False])
             
             # Save results
             filename = save_results(results, "local", model_name, dataset_name)

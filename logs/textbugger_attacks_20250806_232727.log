@@ -1,0 +1,10 @@
+2025-08-06 23:27:27,950 - INFO - 📝 Log file: logs/textbugger_attacks_20250806_232727.log
+2025-08-06 23:27:27,950 - INFO - 🎬 Starting TextBugger Attacks
+2025-08-06 23:27:27,950 - INFO - Target: api
+2025-08-06 23:27:27,950 - INFO - Dataset: rtmr
+2025-08-06 23:27:27,950 - INFO - Limit: 5
+2025-08-06 23:27:27,950 - INFO - Models: all
+2025-08-06 23:27:27,950 - INFO - ================================================================================
+2025-08-06 23:27:27,997 - INFO - Found credentials in environment variables.
+2025-08-06 23:27:28,078 - INFO - 🚀 Starting ibm_watson attacks on rtmr
+2025-08-06 23:27:28,078 - INFO - 🎯 [ibm_watson] Attack 1/5

@@ -1,0 +1,54 @@
+2025-08-06 23:27:39,944 - INFO - 📝 Log file: logs/textbugger_attacks_20250806_232739.log
+2025-08-06 23:27:39,944 - INFO - 🎬 Starting TextBugger Attacks
+2025-08-06 23:27:39,944 - INFO - Target: api
+2025-08-06 23:27:39,944 - INFO - Dataset: rtmr
+2025-08-06 23:27:39,944 - INFO - Limit: 5
+2025-08-06 23:27:39,944 - INFO - Models: all
+2025-08-06 23:27:39,944 - INFO - ================================================================================
+2025-08-06 23:27:39,985 - INFO - 🚀 Starting ibm_watson attacks on rtmr
+2025-08-06 23:27:39,986 - INFO - 🎯 [ibm_watson] Attack 1/5
+2025-08-06 23:27:50,736 - INFO -   ✅ SUCCESS
+2025-08-06 23:27:50,736 - INFO - 🎯 [ibm_watson] Attack 2/5
+2025-08-06 23:28:03,393 - INFO -   ✅ SUCCESS
+2025-08-06 23:28:03,395 - INFO - 🎯 [ibm_watson] Attack 3/5
+2025-08-06 23:28:11,716 - INFO -   ✅ SUCCESS
+2025-08-06 23:28:11,717 - INFO - 🎯 [ibm_watson] Attack 4/5
+2025-08-06 23:28:21,635 - INFO -   ✅ SUCCESS
+2025-08-06 23:28:21,637 - INFO - 🎯 [ibm_watson] Attack 5/5
+2025-08-06 23:28:48,197 - INFO -   ✅ SUCCESS
+2025-08-06 23:28:48,200 - INFO - 📊 ibm_watson Summary: 5/5 (100.0%) - 208 requests
+2025-08-06 23:28:48,200 - INFO - 💾 Results: results/rtmr/api_ibm_watson_attacks_20250806_232848.csv
+2025-08-06 23:28:48,201 - INFO - 🚀 Starting azure_text_analytics attacks on rtmr
+2025-08-06 23:28:48,201 - INFO - 🎯 [azure_text_analytics] Attack 1/5
+2025-08-06 23:28:54,511 - INFO -   ✅ SUCCESS
+2025-08-06 23:28:54,512 - INFO - 🎯 [azure_text_analytics] Attack 2/5
+2025-08-06 23:28:59,894 - INFO -   ✅ SUCCESS
+2025-08-06 23:28:59,895 - INFO - 🎯 [azure_text_analytics] Attack 3/5
+2025-08-06 23:29:04,671 - INFO -   ✅ SUCCESS
+2025-08-06 23:29:04,672 - INFO - 🎯 [azure_text_analytics] Attack 4/5
+2025-08-06 23:29:09,475 - INFO -   ✅ SUCCESS
+2025-08-06 23:29:09,476 - INFO - 🎯 [azure_text_analytics] Attack 5/5
+2025-08-06 23:29:15,970 - INFO -   ✅ SUCCESS
+2025-08-06 23:29:15,973 - INFO - 📊 azure_text_analytics Summary: 5/5 (100.0%) - 187 requests
+2025-08-06 23:29:15,973 - INFO - 💾 Results: results/rtmr/api_azure_text_analytics_attacks_20250806_232915.csv
+2025-08-06 23:29:15,973 - INFO - 🚀 Starting google_cloud_nlp attacks on rtmr
+2025-08-06 23:29:15,973 - INFO - 🎯 [google_cloud_nlp] Attack 1/5
+2025-08-06 23:30:23,214 - INFO -   ❌ FAILED
+2025-08-06 23:30:23,216 - INFO - 🎯 [google_cloud_nlp] Attack 2/5
+2025-08-06 23:30:48,584 - INFO -   ✅ SUCCESS
+2025-08-06 23:30:48,585 - INFO - 🎯 [google_cloud_nlp] Attack 3/5
+2025-08-06 23:31:03,758 - INFO -   ✅ SUCCESS
+2025-08-06 23:31:03,759 - INFO - 🎯 [google_cloud_nlp] Attack 4/5
+2025-08-06 23:31:18,887 - INFO -   ✅ SUCCESS
+2025-08-06 23:31:18,888 - INFO - 🎯 [google_cloud_nlp] Attack 5/5
+2025-08-06 23:31:39,317 - INFO -   ✅ SUCCESS
+2025-08-06 23:31:39,320 - INFO - 📊 google_cloud_nlp Summary: 4/5 (80.0%) - 252 requests
+2025-08-06 23:31:39,320 - INFO - 💾 Results: results/rtmr/api_google_cloud_nlp_attacks_20250806_233139.csv
+2025-08-06 23:31:39,331 - INFO - ================================================================================
+2025-08-06 23:31:39,331 - INFO - 🏁 FINAL SUMMARY
+2025-08-06 23:31:39,332 - INFO - ================================================================================
+2025-08-06 23:31:39,332 - INFO - 🔹 ibm_watson: 5/5 (100.0%) - 208 requests
+2025-08-06 23:31:39,332 - INFO - 🔹 azure_text_analytics: 5/5 (100.0%) - 187 requests
+2025-08-06 23:31:39,332 - INFO - 🔹 google_cloud_nlp: 4/5 (80.0%) - 252 requests
+2025-08-06 23:31:39,332 - INFO - ✅ All attacks completed!
+2025-08-06 23:31:39,332 - INFO - 📁 Check results/ folder and logs/textbugger_attacks_20250806_232739.log for details
