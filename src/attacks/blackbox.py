@@ -135,7 +135,7 @@ class BlackBoxTextBugger:
 
                 if best_bug:
                     words[idx] = best_bug
-                    new_sentence = fix_spacing(" ".join(words))
+                    new_sentence = " ".join(words)
                     adv_text = adv_text.replace(sentence, new_sentence)
                     sentence = new_sentence
 
