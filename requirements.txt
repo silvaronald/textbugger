@@ -1,17 +1,38 @@
-# Dependências já existentes
+# Core dependencies
 pandas
+numpy
 scikit-learn
+python-dotenv
+
+# Machine Learning
 tensorflow==2.15.0
 tensorflow_hub
-optuna
-keras_tuner
+transformers
+torch
+
+# TextBugger specific
 spacy
 nltk
 sentence-transformers
-google-cloud-language
-boto3                       # AWS Comprehend
-azure-ai-textanalytics      # Azure Text Analytics
-azure-core                  # Necessário para autenticação Azure
-ibm-watson                  # IBM Watson NLU
 fasttext
-protobuf>=3.20              # Evita problemas de compatibilidade com TensorFlow e Google APIs
+
+# Model training and optimization
+optuna
+keras_tuner
+
+# API clients
+google-cloud-language       # Google Cloud NLP
+boto3                       # AWS Comprehend  
+azure-ai-textanalytics      # Azure Text Analytics
+azure-core                  # Azure authentication
+ibm-watson                  # IBM Watson NLU
+
+# Utilities
+protobuf>=3.20              # Compatibility with TensorFlow and Google APIs
+requests
+tqdm
+
+# Development and testing
+jupyter
+matplotlib
+seaborn

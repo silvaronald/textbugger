@@ -1,2 +1,84 @@
-__pycache__
+# Environment variables
+.env
+
+# Credentials and sensitive files
+credentials/
+*.json
+*key*
+*secret*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
 .venv/
+env/
+ENV/
+textbugger-env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# KEEP experimental results and logs for research
+# results/ - KEEP for research reproducibility
+# logs/ - KEEP for experiment tracking
+# *.log - KEEP individual log files
+
+# Remove old attack files (will be replaced by unified scripts)
+src/attacks/run_*.py
+src/attacks/test_*.py
+src/attacks/api_attacks*.log
+src/attacks/results/
+
+# FastText duplicate (to be removed)
+black-box/fastText/
+
+# External downloadable models (large files that can be re-downloaded)
+amazon_review_polarity.bin
+models/external/fasttext/*.bin
+models/external/huggingface/*/
+
+# KEEP our trained models and research artifacts
+!training/
+!training/**/*.h5
+!training/**/*.pkl
+!training/**/*.joblib
+!training/**/*.model
+
+# Large external model files (not our trained ones)
+*.bin
+models/external/**/*.bin
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Temporary files
+tmp/
+temp/

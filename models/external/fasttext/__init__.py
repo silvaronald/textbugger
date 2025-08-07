@@ -1,0 +1,1 @@
+# FastText external models directory

@@ -1,7 +1,12 @@
 import random
 import copy
 from nltk.corpus import wordnet
-from utils import split_sentences, split_words, fix_spacing
+try:
+    # Try relative import first (when used as package)
+    from ..utils.text_processing import split_sentences, split_words, fix_spacing
+except ImportError:
+    # Fall back to absolute import (when src/ is in path)
+    from utils.text_processing import split_sentences, split_words, fix_spacing
 from difflib import SequenceMatcher
 
 

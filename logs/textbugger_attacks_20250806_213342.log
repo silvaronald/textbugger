@@ -1,0 +1,37 @@
+2025-08-06 21:33:42,713 - INFO - 📝 Log file: logs/textbugger_attacks_20250806_213342.log
+2025-08-06 21:33:42,713 - INFO - 🎬 Starting TextBugger Attacks
+2025-08-06 21:33:42,713 - INFO - Target: api
+2025-08-06 21:33:42,714 - INFO - Dataset: rtmr
+2025-08-06 21:33:42,714 - INFO - Limit: 1
+2025-08-06 21:33:42,714 - INFO - Models: all
+2025-08-06 21:33:42,714 - INFO - ================================================================================
+2025-08-06 21:33:42,769 - INFO - Found credentials in environment variables.
+2025-08-06 21:33:42,836 - INFO - 🚀 Starting ibm_watson attacks on rtmr
+2025-08-06 21:33:42,837 - INFO - 🎯 [ibm_watson] Attack 1/1
+2025-08-06 21:34:16,135 - INFO -   ❌ FAILED
+2025-08-06 21:34:16,137 - INFO - 📊 ibm_watson Summary: 0/1 (0.0%) - 85 requests
+2025-08-06 21:34:16,137 - INFO - 💾 Results: results/rtmr/api_ibm_watson_attacks_20250806_213416.csv
+2025-08-06 21:34:16,137 - INFO - 🚀 Starting azure_text_analytics attacks on rtmr
+2025-08-06 21:34:16,137 - INFO - 🎯 [azure_text_analytics] Attack 1/1
+2025-08-06 21:34:29,199 - INFO -   ❌ FAILED
+2025-08-06 21:34:29,201 - INFO - 📊 azure_text_analytics Summary: 0/1 (0.0%) - 85 requests
+2025-08-06 21:34:29,201 - INFO - 💾 Results: results/rtmr/api_azure_text_analytics_attacks_20250806_213429.csv
+2025-08-06 21:34:29,201 - INFO - 🚀 Starting google_cloud_nlp attacks on rtmr
+2025-08-06 21:34:29,201 - INFO - 🎯 [google_cloud_nlp] Attack 1/1
+2025-08-06 21:35:46,820 - INFO -   ❌ FAILED
+2025-08-06 21:35:46,822 - INFO - 📊 google_cloud_nlp Summary: 0/1 (0.0%) - 85 requests
+2025-08-06 21:35:46,823 - INFO - 💾 Results: results/rtmr/api_google_cloud_nlp_attacks_20250806_213546.csv
+2025-08-06 21:35:46,823 - INFO - 🚀 Starting aws_comprehend attacks on rtmr
+2025-08-06 21:35:46,823 - INFO - 🎯 [aws_comprehend] Attack 1/1
+2025-08-06 21:35:47,920 - ERROR -   💥 ERROR: An error occurred (UnrecognizedClientException) when calling the DetectSentiment operation: The security token included in the request is invalid.
+2025-08-06 21:35:47,922 - INFO - 📊 aws_comprehend Summary: 0/1 (0.0%) - 0 requests
+2025-08-06 21:35:47,922 - INFO - 💾 Results: results/rtmr/api_aws_comprehend_attacks_20250806_213547.csv
+2025-08-06 21:35:47,926 - INFO - ================================================================================
+2025-08-06 21:35:47,926 - INFO - 🏁 FINAL SUMMARY
+2025-08-06 21:35:47,926 - INFO - ================================================================================
+2025-08-06 21:35:47,926 - INFO - 🔹 ibm_watson: 0/1 (0.0%) - 85 requests
+2025-08-06 21:35:47,926 - INFO - 🔹 azure_text_analytics: 0/1 (0.0%) - 85 requests
+2025-08-06 21:35:47,926 - INFO - 🔹 google_cloud_nlp: 0/1 (0.0%) - 85 requests
+2025-08-06 21:35:47,926 - INFO - 🔹 aws_comprehend: 0/1 (0.0%) - 0 requests
+2025-08-06 21:35:47,926 - INFO - ✅ All attacks completed!
+2025-08-06 21:35:47,926 - INFO - 📁 Check results/ folder and logs/textbugger_attacks_20250806_213342.log for details
