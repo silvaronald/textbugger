@@ -1,6 +1,6 @@
 import pandas as pd
 
-models = ["bert-mini"]
+models = ["bert-mini", "twitter-roberta", "sst2", "fasttext"]
 datasets = ["rtmr", "hate", "kaggle"]
 
 for m in models:
