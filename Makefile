@@ -11,6 +11,7 @@ setup:
 download-models:
 	. $(VENV_NAME)/bin/activate && python -m spacy download en_core_web_sm
 	. $(VENV_NAME)/bin/activate && python -c "import nltk; nltk.download('wordnet')"
+	. $(VENV_NAME)/bin/activate && python -c "import nltk; nltk.download('averaged_perceptron_tagger')"
 
 # 4 Configuração completa em um único comando
 all: setup download-models
