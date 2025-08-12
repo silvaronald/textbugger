@@ -241,13 +241,15 @@ class FastWordBugger:
         self.similarity = SemanticSimilarity(threshold=similarity_threshold)
         self.pos_calculator = POSWeightCalculator()
         self.pos_threshold = pos_threshold
+        self.training_reqs = 0
         
     def train_pos_weights(self, training_texts):
         if not training_texts:
             raise ValueError("Dados de treinamento são obrigatórios para calcular pesos POS")
         
         self.pos_calculator.calculate_pos_weights(training_texts, self.classifier)
-    
+        self.training_reqs = self.pos_calculator.num_reqs
+
     def filter_words_by_pos(self, words):
         if not words:
             return []
@@ -360,7 +362,8 @@ class FastWordBugger:
                         print(f"✓ SUCESSO! Label mudou de {original_label} para {new_label}")
                         print(f"  Modificação: '{word}' -> '{bug}'")
                         print(f"  Score: {original_score:.3f} -> {new_score:.3f}")
-                        return modified_text, original_label, num_reqs, num_bugs, True
+                        modifications_made += 1
+                        return modified_text, original_label, num_reqs, modifications_made, True
                     
                     # Guarda o melhor bug (maior redução de score)
                     if score_drop > best_score_drop:
@@ -393,4 +396,4 @@ class FastWordBugger:
         print(f"Bugs testados: {num_bugs}")
         print(f"Sucesso: {success}")
         
-        return adv_text, original_label, num_reqs, num_bugs, success
+        return adv_text, original_label, num_reqs, modifications_made, success

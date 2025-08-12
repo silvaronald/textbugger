@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """
-Unified TextBugger Attack Runner with FastTextBugger Support
+Unified TextBugger Attack Runner with FastWordBugger Support
 
 This script consolidates all attack functionality:
 - API-based blackbox attacks (IBM Watson, Azure, Google Cloud, AWS)
 - Local model attacks (FastText, HuggingFace models)
-- Support for both original TextBugger and optimized FastTextBugger
+- Support for both original TextBugger and optimized FastWordBugger
 - Configurable datasets and attack limits
 
 Usage:
@@ -29,7 +29,7 @@ from pathlib import Path
 sys.path.append(str(Path(__file__).parent.parent / "src"))
 
 from dotenv import load_dotenv
-from attacks.fasttextbugger import FastTextBugger  # Import the optimized version
+from attacks.fastwordbugger import FastWordBugger  # Import the optimized version
 from models.api_models import APIModelWrapper
 from clients.ibm_watson import IBMWatsonClassifier
 from clients.azure_text import AzureTextAnalyticsClassifier
@@ -133,13 +133,13 @@ def save_results(results, target_type, model_name, dataset_name):
     results_dir.mkdir(parents=True, exist_ok=True)
     
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    filename = results_dir / f"{target_type}_{model_name}_fasttextbugger_attacks_{timestamp}.csv"
+    filename = results_dir / f"{target_type}_{model_name}_FastWordBugger_attacks_{timestamp}.csv"
     
     with open(filename, 'w', newline='', encoding='utf-8') as f:
         writer = csv.writer(f)
         writer.writerow([
             "original_text", "adversarial_text", "original_label", 
-            "requests_used", "num_perturbed", "attack_successful", "timestamp"
+            "requests_used", "training_requests_used", "num_perturbed", "attack_successful", "timestamp"
         ])
         
         for result in results:
@@ -148,8 +148,8 @@ def save_results(results, target_type, model_name, dataset_name):
     return filename
 
 def create_attacker(wrapper, training_data=None, logger=None):
-    """Create FastTextBugger attacker"""
-    attacker = FastTextBugger(wrapper, similarity_threshold=0.8, pos_threshold=0.1)
+    """Create FastWordBugger attacker"""
+    attacker = FastWordBugger(wrapper, similarity_threshold=0.8, pos_threshold=0.1)
     
     # Train POS weights if training data provided
     if training_data:
@@ -171,20 +171,22 @@ def run_single_attack(attacker, text, logger, model_name, attack_num, total_atta
     
     try:
         adv_text, og_label, num_reqs, num_bugs, success = attacker.attack(clean_text)
-        
+
+        train_reqs = attacker.training_reqs if hasattr(attacker, 'training_reqs') else 0
+
         if success:
-            logger.info(f"  ✅ SUCCESS - {num_reqs} requests, {num_bugs} bugs tested")
+            logger.info(f"  ✅ SUCCESS - {num_reqs} requests, {num_bugs} bugs tested, {train_reqs} training requests used")
         else:
-            logger.info(f"  ❌ FAILED - {num_reqs} requests, {num_bugs} bugs tested")
-        
-        return [clean_text, adv_text, og_label, num_reqs, num_bugs, success], num_reqs, success
+            logger.info(f"  ❌ FAILED - {num_reqs} requests, {num_bugs} bugs tested, {train_reqs} training requests used")
+
+        return [clean_text, adv_text, og_label, num_reqs, train_reqs, num_bugs, success], num_reqs, success
         
     except Exception as e:
         logger.error(f"  💥 ERROR: {e}")
         return [clean_text, "error", "error", 0, 0, False], 0, False
 
 def run_api_attacks(models, dataset_name, limit, train_pos, logger, from_initial=0):
-    """Run FastTextBugger attacks on API models"""
+    """Run FastWordBugger attacks on API models"""
     api_clients = {}
     
     # Try to initialize each client
@@ -198,15 +200,15 @@ def run_api_attacks(models, dataset_name, limit, train_pos, logger, from_initial
     # except Exception as e:
     #     logger.warning(f"⚠️ Azure Text Analytics not available: {e}")
     
-    # try:
-    #     api_clients["google_cloud_nlp"] = GoogleNLPClassifier()
-    # except Exception as e:
-    #     logger.warning(f"⚠️ Google Cloud NLP not available: {e}")
+    try:
+        api_clients["google_cloud_nlp"] = GoogleNLPClassifier()
+    except Exception as e:
+        logger.warning(f"⚠️ Google Cloud NLP not available: {e}")
     
-    # try:
-    #     api_clients["aws_comprehend"] = AWSComprehendClassifier()
-    # except Exception as e:
-    #     logger.warning(f"⚠️ AWS Comprehend not available: {e}")
+    try:
+        api_clients["aws_comprehend"] = AWSComprehendClassifier()
+    except Exception as e:
+        logger.warning(f"⚠️ AWS Comprehend not available: {e}")
     
     if models:
         # Filter to requested models
@@ -226,7 +228,7 @@ def run_api_attacks(models, dataset_name, limit, train_pos, logger, from_initial
     overall_results = {}
     
     for api_name, client in api_clients.items():
-        logger.info(f"🚀 Starting {api_name} FastTextBugger attacks on {dataset_name}")
+        logger.info(f"🚀 Starting {api_name} FastWordBugger attacks on {dataset_name}")
         
         try:
             wrapper = APIModelWrapper(client)
@@ -272,7 +274,7 @@ def run_api_attacks(models, dataset_name, limit, train_pos, logger, from_initial
     return overall_results
 
 def run_local_attacks(models, dataset_name, limit, train_pos, logger, from_initial=0):
-    """Run FastTextBugger attacks on local models"""
+    """Run FastWordBugger attacks on local models"""
     if not LOCAL_MODELS_AVAILABLE:
         logger.error("❌ Local models not available - missing dependencies (fasttext, transformers, etc.)")
         logger.info("💡 Install with: pip install fasttext transformers torch")
@@ -295,7 +297,7 @@ def run_local_attacks(models, dataset_name, limit, train_pos, logger, from_initi
     overall_results = {}
     
     for model_name in models:
-        logger.info(f"🚀 Starting {model_name} FastTextBugger attacks on {dataset_name}")
+        logger.info(f"🚀 Starting {model_name} FastWordBugger attacks on {dataset_name}")
         
         try:
             wrapper = LocalModelWrapper(model_name)
@@ -341,7 +343,7 @@ def run_local_attacks(models, dataset_name, limit, train_pos, logger, from_initi
     return overall_results
 
 def main():
-    parser = argparse.ArgumentParser(description="Run FastTextBugger attacks")
+    parser = argparse.ArgumentParser(description="Run FastWordBugger attacks")
     parser.add_argument("--target", choices=["api", "local"], required=True,
                        help="Target type: api (API models) or local (local models)")
     parser.add_argument("--model", nargs="*", 
@@ -364,7 +366,7 @@ def main():
     if args.limit is None:
         args.limit = int(os.getenv('NUM_ATTACKS_API', 5))
     
-    logger.info("🎬 Starting FastTextBugger Attacks")
+    logger.info("🎬 Starting FastWordBugger Attacks")
     logger.info(f"Target: {args.target}")
     logger.info(f"Dataset: {args.dataset}")
     logger.info(f"Limit: {args.limit}")
