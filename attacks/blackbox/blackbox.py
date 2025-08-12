@@ -1,7 +1,7 @@
 import random
 import copy
 from nltk.corpus import wordnet
-from attacks.blackbox.utils import split_sentences, split_words, fix_spacing
+from utils import split_sentences, split_words, fix_spacing
 from difflib import SequenceMatcher
 
 

@@ -1,11 +1,11 @@
-from attacks.blackbox.blackbox import BlackBoxTextBugger
-from attacks.blackbox.model_wrapper import ClassificationWrapper
+from blackbox import BlackBoxTextBugger
+from model_wrapper import ClassificationWrapper
 import pandas as pd 
 import csv 
 import os
 import re
 
-models = ["bert-mini"]
+models = ["toxic-bert"]
 datasets = ["kaggle"]
 
 def log_result(csv_file, original_text, adversarial_text, original_label, num_reqs, num_bugs, attack_successful):
