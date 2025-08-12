@@ -1,4 +1,4 @@
-from whitebox import AdversarialAttack
+from attacks.whitebox.whitebox import AdversarialAttack
 import numpy as np
 import pandas as pd 
 import csv 
