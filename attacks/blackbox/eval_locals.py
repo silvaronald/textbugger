@@ -8,6 +8,7 @@ for m in models:
     print(f"Results for {m}:")
 
     for d in datasets:
+        print(f"Dataset {d}")
         df = pd.read_csv(f"results/{d}/{m}_results.csv")
 
         total_words = df["original_text"].astype(str).apply(lambda x: len(x.split())).sum()
@@ -23,7 +24,7 @@ for m in models:
         success_rate = df["attack_sucessful"].astype(bool).mean()
 
         # Print results
-        print("Perturbed words ratio:", total_perturbed / total_words)
+        print(f"Perturbed words ratio: {(total_perturbed / total_words):.2f}")
         print("Total requests_number:", total_requests)
         print(f"Attack success rate: {success_rate:.2%}")
         print()
