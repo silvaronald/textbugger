@@ -1,0 +1,4 @@
+original_text,adversarial_text,original_label,requests_number,num_perturbed,attack_sucessful
+"hi. 
+
+wow. you are such a geek. bullshit mother fucker.",Aloha State. wow. you are such a geek. bullshit mother fucker.,toxic,29,1,False
