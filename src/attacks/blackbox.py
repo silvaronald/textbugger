@@ -2,13 +2,12 @@ import random
 import copy
 from nltk.corpus import wordnet
 try:
-    # Try relative import first (when used as package)
+    # Tenta import relativo (quando usado como pacote)
     from ..utils.text_processing import split_sentences, split_words, fix_spacing
 except ImportError:
-    # Fall back to absolute import (when src/ is in path)
+    # Fallback para import absoluto (quando src/ está no path)
     from utils.text_processing import split_sentences, split_words, fix_spacing
 from difflib import SequenceMatcher
-
 
 
 class BugGenerator:
@@ -37,7 +36,8 @@ class BugGenerator:
     def substitute_char(self, word: str) -> str:
         chars = list(word)
         idx = random.randint(0, len(chars)-1)
-        chars[idx] = self.visual_chars.get(chars[idx].lower(), self.keyboard_adjacent.get(chars[idx], chars[idx]))
+        chars[idx] = self.visual_chars.get(chars[idx].lower(),
+                                           self.keyboard_adjacent.get(chars[idx], chars[idx]))
         return ''.join(chars)
 
     def substitute_word(self, word: str) -> str:
@@ -50,7 +50,7 @@ class BugGenerator:
         return word
 
     def generate_bugs(self, word: str):
-        if len(word) <= 1:  # pula palavras muito curtas
+        if len(word) <= 1:
             return [word]
         return [
             self.insert_space(word),
@@ -60,12 +60,15 @@ class BugGenerator:
             self.substitute_word(word),
         ]
 
+
 class SemanticSimilarity:
     def __init__(self, threshold=0.8):
         self.threshold = threshold
 
     def similarity(self, x, x_adv):
-        return SequenceMatcher(None, x, x_adv).ratio() >= self.threshold
+        """Use SequenceMatcher for string similarity instead of semantic similarity"""
+        ratio = SequenceMatcher(None, x, x_adv).ratio()
+        return ratio >= self.threshold
 
 
 class BlackBoxTextBugger:
@@ -138,6 +141,5 @@ class BlackBoxTextBugger:
                     new_sentence = " ".join(words)
                     adv_text = adv_text.replace(sentence, new_sentence)
                     sentence = new_sentence
-
 
         return adv_text, original_label, num_reqs, num_bugs, False
