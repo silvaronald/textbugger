@@ -1,13 +1,25 @@
 import pandas as pd
 
-for model in ["lr", "cnn", "lstm"]:
-    # Load the CSV file
-    df = pd.read_csv(f"rtmr/{model}_results.csv")  # replace with your filename
+models = ["lr", "cnn", "lstm"]
+datasets = ["rtmr", "hate", "kaggle"]
 
-    # Ensure the 'attack_sucessful' column is boolean
-    df["attack_sucessful"] = df["attack_sucessful"].astype(bool)
+for m in models:
+    print("-----------------")
+    print(f"Results for {m}:")
 
-    # Calculate the proportion of True values
-    proportion = df["attack_sucessful"].mean()
+    for d in datasets:
+        print(f"Dataset {d}")
+        df = pd.read_csv(f"results/{d}/{m}_results.csv")
 
-    print(f"Proportion of successful attacks: {proportion:.2%}")
+        total_words = df["original_text"].astype(str).apply(lambda x: len(x.split())).sum()
+        # Sum of num_perturbed
+        total_perturbed = df["num_perturbed"].sum()
+
+        # Rate of successful attacks
+        # Ensure attack_sucessful column is boolean or castable
+        success_rate = df["attack_sucessful"].astype(bool).mean()
+
+        # Print results
+        print(f"Perturbed words ratio: {(total_perturbed / total_words):.4f}")
+        print(f"Attack success rate: {success_rate:.2%}")
+        print()

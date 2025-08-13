@@ -1,7 +1,7 @@
 # Dependências já existentes
 pandas
 scikit-learn
-tensorflow==2.15.0
+tensorflow
 tensorflow_hub
 optuna
 keras_tuner

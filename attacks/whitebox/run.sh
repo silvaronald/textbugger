@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=attack_rtmr
+#SBATCH --job-name=atk_wb
 #SBATCH --ntasks=1
 #SBATCH --mem 64G
 #SBATCH -c 32
@@ -11,4 +11,4 @@ module load Python/3.10
 
 source $HOME/textbugger_env/bin/activate
 
-python $HOME/textbugger/attacks/run.py
+python $HOME/textbugger/attacks/whitebox/run.py
