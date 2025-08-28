@@ -15,6 +15,7 @@ spacy
 nltk
 sentence-transformers
 fasttext
+textattack
 
 # Model training and optimization
 optuna
